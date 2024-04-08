@@ -1,56 +1,49 @@
 <?php
-// Check if the 'Add Students' button is pressed
-if(isset($_POST['add_student'])) {
-    // Connect to your MySQL database
-    $servername = "localhost";
-    $username = "root"; // Replace with your MySQL username
-    $password = ""; // Replace with your MySQL password
-    $database = "webtea"; // Replace with your MySQL database name
+include '../../db_connection.php'; 
+session_start(); 
 
-    $conn = new mysqli($servername, $username, $password, $database);
+if (!isset($_SESSION['username']) || !isset($_SESSION['role'])) {
+    header("Location: ../../index.html");
+    exit;
+}
+if ($_SESSION['role'] !== "bridge") {
+    header("Location: ../../index.html");
+    exit;
+}
 
-    // Check connection
-    if ($conn->connect_error) {
-        die("Connection failed: " . $conn->connect_error);
-    }
+$username = $_SESSION['username'];
+$role = $_SESSION['role'];
 
-    // Get the current date
     $current_date = date("Y_m_d");
 
-    // SQL query to create the table
-    $sql = "CREATE TABLE IF NOT EXISTS permitted_students_$current_date (
-        ugid VARCHAR(6),
-        entry_time DATETIME(6),
-        exit_time DATETIME(6)
-    )";
-
-    // Execute the query
-    if ($conn->query($sql) === TRUE) {
-        echo "Table created successfully!";
-    } else {
-        echo "Error creating table: " . $conn->error;
-    }
-
-    // Close the database connection
+   
     $conn->close();
-}
-
-// Function to generate a button for entering ugid
-function generateUgidButton() {
-    echo '<form method="post" action="enter_ugid.php">';
-    echo '<input type="text" name="ugid" placeholder="Enter ugid">';
-    echo '<button type="submit">Enter ugid</button>';
-    echo '</form>';
-}
 ?>
 
 <!DOCTYPE html>
 <html>
 <head>
     <title>Permission Grant</title>
+    <script>
+        function confirmCreateNewOutingList() {
+            if (confirm("Creating a new weekend outing list will prevent adding students to the previous week's list. Are you sure you want to proceed?")) {
+                window.location.href = "create_outing_list.php";
+            }
+        }
+    </script>
 </head>
 <body>
-    <!-- Call the function to generate the button for entering ugid -->
-    <?php generateUgidButton(); ?>
+
+    <form action="add_to_this_week.php">
+        <button type="submit">Add Students to This Week's List</button>
+    </form>
+
+    <form action="create_outing_list.php" method="post"> 
+        <button type="submit">Create new weekend list</button>
+    </form>
+
+    <a href="bridge.php"><button>Go Back to Home Page</button></a>
 </body>
 </html>
+
+
