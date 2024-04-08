@@ -11,8 +11,6 @@ if (file_exists($env_file)) {
     }
 }
 
-
-
 $db_host = $_ENV['DB_HOST'];
 $db_user = $_ENV['DB_USER'];
 $db_pass = $_ENV['DB_PASS'];
