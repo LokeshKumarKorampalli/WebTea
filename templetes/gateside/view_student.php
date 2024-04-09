@@ -72,6 +72,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['selected_table'])) {
             <?php endforeach; ?>
         </ul>
     <?php endif; ?>
-    <a href="bridge.php"><button>Go Back to Home Page</button></a>
+    <a href="gate.php"><button>Go Back to Home Page</button></a>
 </body>
 </html>
