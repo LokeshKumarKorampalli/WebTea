@@ -21,24 +21,30 @@ if (isset($_POST['student_id'])) {
     // Validate and sanitize the input (you can add more validation as needed)
     $student_id = filter_var($student_id, FILTER_SANITIZE_STRING);
 
-    // Check if 'student_id' exists in the 'permitted_students' list
-    $check_student_sql = "SELECT * FROM permitted_students_20240408 WHERE ugid = '$student_id'";
-    $student_result = $conn->query($check_student_sql);
+    // Construct the SQL query to select the most recent table
+    $latest_table_sql = "SELECT TABLE_NAME 
+                         FROM information_schema.tables 
+                         WHERE TABLE_SCHEMA = 'webtea' 
+                         AND TABLE_NAME LIKE 'permitted_students_%' 
+                         ORDER BY TABLE_NAME DESC LIMIT 1";
 
-    if ($student_result->num_rows == 0) {
-        // Student not found in the list
-        echo "<script>alert('Record not found for this student ID.')</script>";
-    } else {
-        // Check if 'entry_time' is already filled for the student
-        $check_entry_sql = "SELECT entry_time FROM permitted_students_20240408 WHERE ugid = '$student_id' AND entry_time IS NOT NULL";
-        $entry_result = $conn->query($check_entry_sql);
+    // Execute the SQL query to get the most recent table
+    $latest_table_result = $conn->query($latest_table_sql);
 
-        if ($entry_result->num_rows > 0) {
-            // Entry time already recorded
-            echo "<script>alert('Entry has already been recorded for this student ID. We cannot accept the record.')</script>";
+    if ($latest_table_result->num_rows > 0) {
+        $row = $latest_table_result->fetch_assoc();
+        $latest_table_name = $row['TABLE_NAME'];
+
+        // Check if the student ID already exists in the table
+        $check_student_sql = "SELECT * FROM $latest_table_name WHERE ugid = '$student_id'";
+        $check_student_result = $conn->query($check_student_sql);
+
+        if ($check_student_result->num_rows > 0) {
+            // Student already exists in the table
+            echo "<script>alert('Student already exists in the table.')</script>";
         } else {
-            // Update the 'entry_time' column in the 'permitted_students' table
-            $sql = "UPDATE permitted_students_20240408 SET entry_time = CURRENT_TIMESTAMP(6) WHERE ugid = '$student_id'";
+            // Update the 'entry_time' column in the most recent table
+            $sql = "UPDATE $latest_table_name SET entry_time = CURRENT_TIMESTAMP(6) WHERE ugid = '$student_id'";
 
             if ($conn->query($sql) === TRUE) {
                 echo "Entry recorded successfully!";
@@ -46,6 +52,8 @@ if (isset($_POST['student_id'])) {
                 echo "Error updating entry: " . $conn->error;
             }
         }
+    } else {
+        echo "No permitted_students table found.";
     }
 
     $conn->close();
@@ -67,5 +75,7 @@ if (isset($_POST['student_id'])) {
         <input type="text" id="student_id" name="student_id" required>
         <button type="submit">Record Entry</button>
     </form>
+    <a href="gate.php"><button>Go Back to Home Page</button></a>
+
 </body>
 </html>

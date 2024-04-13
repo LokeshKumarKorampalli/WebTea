@@ -33,15 +33,12 @@ $role = $_SESSION['role'];
     </script>
 </head>
 <body>
-
-    <form action="add_to_this_week.php">
-        <button type="submit">Add Students to This Week's List</button>
-    </form>
+    <button onclick="window.location.href='add_to_this_week.php'">Add Students to This Week's List</button>
 
     <form action="create_outing_list.php" method="post"> 
-        <button type="submit">Create new weekend list</button>
+      <button onclick="confirmCreateNewOutingList()">Create new weekend list</button>
     </form>
-
+    
     <a href="bridge.php"><button>Go Back to Home Page</button></a>
 </body>
 </html>

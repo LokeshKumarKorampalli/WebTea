@@ -40,23 +40,12 @@ if (isset($_POST['logout'])) {
 <body>
     <h1>Welcome, <?php echo $username; ?>!</h1>
     <p>Your role is: <?php echo $role; ?></p>
-    <button onclick="addStudent()">Add Students</button>
+    <button onclick="window.location.href='add_student.php'">Add Students</button>
     <button onclick="window.location.href='view_student.php'">View permitted students</button>
     <form method="post" action="">
         <button type="submit" name="logout">Sign Out</button>
     </form>
 
-    <!-- JavaScript to submit the form when "Add Students" button is clicked -->
-    <script>
-        function addStudent() {
-            document.getElementById("addStudentForm").submit();
-        }
-    </script>
-
-    <!-- Form to submit the 'Add Students' button -->
-    <form id="addStudentForm" method="post" action="add_student.php">
-        <input type="hidden" name="add_student">
-    </form>
 </body>
 </html>
 <style>

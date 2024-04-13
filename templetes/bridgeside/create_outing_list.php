@@ -29,8 +29,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 )";
 
         if ($conn->query($sql) === TRUE) {
-            // Only display success message if the table creation was successful
-            echo "New outing list created successfully";
         } else {
             echo "Error creating table: " . $conn->error;
             $showSuccessMessage = false; // Set flag to false

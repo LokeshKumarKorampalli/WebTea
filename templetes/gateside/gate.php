@@ -39,8 +39,9 @@ if (isset($_POST['logout'])) {
     <p>Your role is: <?php echo $role; ?></p>
     
     <button onclick="window.location.href='view_student.php'">View permitted students</button>
-    <button onclick="window.location.href='record_entry.php'">Record Entry</button>
     <button onclick="window.location.href='record_exit.php'">Record Exit</button>
+    <button onclick="window.location.href='record_entry.php'">Record Entry</button>
+
     
     <form method="post" action="">
         <button type="submit" name="logout">Sign Out</button>

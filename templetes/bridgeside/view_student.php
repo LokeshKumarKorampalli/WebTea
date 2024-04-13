@@ -59,22 +59,31 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['selected_table'])) {
     </form>
     <?php if (isset($ugids)) : ?>
         <h2>Students Information:</h2>
-        <ul>
+        <table border="1">
+            <tr>
+                <th>UGID</th>
+                <th>Name</th>
+                <th>Course</th>
+                <th>Email</th>
+                <th>Exit Time</th>
+                <th>Entry Time</th>
+            </tr>
             <?php foreach ($ugids as $student) : ?>
-                <li>
-                    <strong>UGID:</strong> <?php echo $student['UGID']; ?><br>
-                    <strong>Name:</strong> <?php echo $student['Name']; ?><br>
-                    <strong>Course:</strong> <?php echo $student['Course']; ?><br>
-                    <strong>Email:</strong> <?php echo $student['email']; ?><br>
-                    <strong>Entry Time:</strong> <?php echo $student['entry_time']; ?><br>
-                    <strong>Exit Time:</strong> <?php echo $student['exit_time']; ?><br>
-                </li>
+                <tr>
+                    <td><?php echo $student['UGID']; ?></td>
+                    <td><?php echo $student['Name']; ?></td>
+                    <td><?php echo $student['Course']; ?></td>
+                    <td><?php echo $student['email']; ?></td>
+                    <td><?php echo $student['exit_time']; ?></td>
+                    <td><?php echo $student['entry_time']; ?></td>
+                </tr>
             <?php endforeach; ?>
-        </ul>
+        </table>
     <?php endif; ?>
     <a href="bridge.php"><button>Go Back to Home Page</button></a>
 </body>
 </html>
+
 
 <style>
     body {

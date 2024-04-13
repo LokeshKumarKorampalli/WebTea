@@ -4,18 +4,18 @@ session_start();
 
 $successMessage = ''; // Variable to store success message
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Get the latest table name from the database
-    $latest_table_sql = "SELECT TABLE_NAME 
-                         FROM information_schema.tables 
-                         WHERE TABLE_SCHEMA = 'webtea' 
-                         AND TABLE_NAME LIKE 'permitted_students_%' 
-                         ORDER BY TABLE_NAME DESC 
-                         LIMIT 1";
-    $result = $conn->query($latest_table_sql);
-    if ($result->num_rows > 0) {
-        $latest_table = $result->fetch_assoc()['TABLE_NAME'];
-        // Check if UGID already exists in the latest table
+// Get the latest table name from the database
+$latest_table_sql = "SELECT TABLE_NAME 
+                     FROM information_schema.tables 
+                     WHERE TABLE_SCHEMA = 'webtea' 
+                     AND TABLE_NAME LIKE 'permitted_students_%' 
+                     ORDER BY TABLE_NAME DESC 
+                     LIMIT 1";
+$result = $conn->query($latest_table_sql);
+if ($result->num_rows > 0) {
+    $latest_table = $result->fetch_assoc()['TABLE_NAME'];
+    // Check if UGID already exists in the latest table
+    if (!empty($_POST['ugid'])) {
         $ugid = strtoupper($_POST['ugid']); // Convert to uppercase
         // Check if UGID exists in all_students table
         $check_ugid_sql = "SELECT COUNT(*) AS count FROM all_students WHERE UGID = '$ugid'";
@@ -41,12 +41,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             // UGID does not exist in all_students table
             $successMessage = "UGID '$ugid' does not exist in the All Students table";
         }
-    } else {
-        echo "No permitted_students table found.";
     }
-    $conn->close();
+} else {
+    echo "No permitted_students table found.";
 }
+$conn->close();
 ?>
+
 <!DOCTYPE html>
 <html>
 <head>
