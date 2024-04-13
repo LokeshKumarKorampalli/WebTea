@@ -14,6 +14,12 @@ if ($_SESSION['role'] !== "gate") {
     exit;
 }
 
+if (!isset($_ENV['DB_NAME']) || empty($_ENV['DB_NAME'])) {
+    die("Database name environment variable is not set.");
+}
+
+$db_name = $_ENV['DB_NAME'];
+
 // Check if the 'student_id' is submitted
 if (isset($_POST['student_id'])) {
     $student_id = $_POST['student_id'];
@@ -24,7 +30,7 @@ if (isset($_POST['student_id'])) {
     // Construct the SQL query to select the most recent table
     $latest_table_sql = "SELECT TABLE_NAME 
                          FROM information_schema.tables 
-                         WHERE TABLE_SCHEMA = 'webtea' 
+                         WHERE TABLE_SCHEMA = '$db_name' 
                          AND TABLE_NAME LIKE 'permitted_students_%' 
                          ORDER BY TABLE_NAME DESC LIMIT 1";
 
@@ -35,21 +41,48 @@ if (isset($_POST['student_id'])) {
         $row = $latest_table_result->fetch_assoc();
         $latest_table_name = $row['TABLE_NAME'];
 
-        // Check if the student ID already exists in the table
+        // Check if the student ID exists in the most recent table
         $check_student_sql = "SELECT * FROM $latest_table_name WHERE ugid = '$student_id'";
         $check_student_result = $conn->query($check_student_sql);
 
         if ($check_student_result->num_rows > 0) {
-            // Student already exists in the table
-            echo "<script>alert('Student already exists in the table.')</script>";
-        } else {
-            // Update the 'entry_time' column in the most recent table
+            // Student exists in the most recent table, update entry time
             $sql = "UPDATE $latest_table_name SET entry_time = CURRENT_TIMESTAMP(6) WHERE ugid = '$student_id'";
 
             if ($conn->query($sql) === TRUE) {
                 echo "Entry recorded successfully!";
             } else {
                 echo "Error updating entry: " . $conn->error;
+            }
+        } else {
+            // Student not found in the most recent table, check previous tables
+            $previous_tables_sql = "SELECT TABLE_NAME 
+                                    FROM information_schema.tables 
+                                    WHERE TABLE_SCHEMA = '$db_name' 
+                                    AND TABLE_NAME LIKE 'permitted_students_%' 
+                                    AND TABLE_NAME < '$latest_table_name' 
+                                    ORDER BY TABLE_NAME DESC";
+
+            $previous_tables_result = $conn->query($previous_tables_sql);
+
+            while ($previous_table_row = $previous_tables_result->fetch_assoc()) {
+                $previous_table_name = $previous_table_row['TABLE_NAME'];
+
+                // Check if the student ID exists in any previous table
+                $check_previous_student_sql = "SELECT * FROM $previous_table_name WHERE ugid = '$student_id'";
+                $check_previous_student_result = $conn->query($check_previous_student_sql);
+
+                if ($check_previous_student_result->num_rows > 0) {
+                    // Student exists in a previous table, update entry time and break the loop
+                    $sql = "UPDATE $previous_table_name SET entry_time = CURRENT_TIMESTAMP(6) WHERE ugid = '$student_id'";
+
+                    if ($conn->query($sql) === TRUE) {
+                        echo "Entry recorded successfully!";
+                    } else {
+                        echo "Error ";
+                    }
+                    break;
+                }
             }
         }
     } else {
@@ -59,6 +92,7 @@ if (isset($_POST['student_id'])) {
     $conn->close();
 }
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">

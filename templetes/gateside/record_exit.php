@@ -14,6 +14,12 @@ if ($_SESSION['role'] !== "gate") {
     exit;
 }
 
+if (!isset($_ENV['DB_NAME']) || empty($_ENV['DB_NAME'])) {
+    die("Database name environment variable is not set.");
+}
+
+$db_name = $_ENV['DB_NAME'];
+
 // Check if the 'student_id' is submitted
 if (isset($_POST['student_id'])) {
     $student_id = $_POST['student_id'];
@@ -24,7 +30,7 @@ if (isset($_POST['student_id'])) {
     // Construct the SQL query to select the most recent table
     $latest_table_sql = "SELECT TABLE_NAME 
                          FROM information_schema.tables 
-                         WHERE TABLE_SCHEMA = 'webtea' 
+                         WHERE TABLE_SCHEMA = '$db_name' 
                          AND TABLE_NAME LIKE 'permitted_students_%' 
                          ORDER BY TABLE_NAME DESC LIMIT 1";
 

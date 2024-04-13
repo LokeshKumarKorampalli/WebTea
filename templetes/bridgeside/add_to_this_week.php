@@ -3,11 +3,15 @@ include '../../db_connection.php';
 session_start(); 
 
 $successMessage = ''; // Variable to store success message
+if (!isset($_ENV['DB_NAME']) || empty($_ENV['DB_NAME'])) {
+    die("Database name environment variable is not set.");
+}
 
+$db_name = $_ENV['DB_NAME'];
 // Get the latest table name from the database
 $latest_table_sql = "SELECT TABLE_NAME 
                      FROM information_schema.tables 
-                     WHERE TABLE_SCHEMA = 'webtea' 
+                     WHERE TABLE_SCHEMA = '$db_name' 
                      AND TABLE_NAME LIKE 'permitted_students_%' 
                      ORDER BY TABLE_NAME DESC 
                      LIMIT 1";

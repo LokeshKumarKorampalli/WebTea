@@ -7,9 +7,15 @@ if (!isset($_SESSION['username']) || !isset($_SESSION['role']) || $_SESSION['rol
     exit;
 }
 
+if (!isset($_ENV['DB_NAME']) || empty($_ENV['DB_NAME'])) {
+    die("Database name environment variable is not set.");
+}
+
+$db_name = $_ENV['DB_NAME'];
+
 $tables_sql = "SELECT TABLE_NAME 
                FROM information_schema.tables 
-               WHERE TABLE_SCHEMA = 'webtea' 
+               WHERE TABLE_SCHEMA = '$db_name'
                AND TABLE_NAME LIKE 'permitted_students_%' 
                ORDER BY TABLE_NAME DESC";
 $result = $conn->query($tables_sql);
