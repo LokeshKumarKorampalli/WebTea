@@ -46,50 +46,87 @@ if (isset($_POST['delete_user'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>View Members</title>
     <style>
-        .delete-icon {
-            cursor: pointer;
-        }
+    body {
+    background-image: url('../../AA.png');
+    background-size: 105% 130%;
+    background-position: center;
+    font-family: 'Roboto', sans-serif;
+    color: black;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh; 
+}
+
+        /* Additional styling for table and buttons */
         table {
             border-collapse: collapse;
-            border: none;
-            
+            width: 50%;
+            margin: 0 auto; /* Center the table horizontally */
         }
+
+        button {
+            font-size: 16px;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            background-color: #ccc; /* Light grey color */
+            color: #333; /* Dark text color */
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #bbb; /* Darker grey on hover */
+        }
+
+        .container {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .adm {
+            margin-top: 20px;
+        }
+        .act{
+            width: 100px;
+        }
+
     </style>
 </head>
 <body>
     <h1>View Members</h1>
     <table border='1'>
-    <tr>
-        <th>Username</th>
-        <th>Password</th>
-        <th>Role</th>
-        <th>Action</th> <!-- Add a new header for action -->
-    </tr>
-    <?php
-    $sql = "SELECT username, password, role FROM users";
-    $result = $conn->query($sql);
-    if ($result->num_rows > 0) {
-        while ($row = $result->fetch_assoc()) {
-            echo "<tr>
-                    <td>" . $row["username"] . "</td>
-                    <td>" . $row["password"] . "</td>
-                    <td>" . $row["role"] . "</td>
-                    <td>
-                        <button class='btn btn-delete' onclick='confirmDelete(\"" . $row["username"] . "\")'>
-                            <span class='mdi mdi-delete mdi-24px'></span>
-                            <span class='mdi mdi-delete-empty mdi-24px'></span>
-                            <span>Delete</span>
-                        </button>
-                    </td>
-                </tr>";
+        <tr>
+            <th>Username</th>
+            <th>Password</th>
+            <th>Role</th>
+            <th class="act">Action</th> <!-- Add a new header for action -->
+        </tr>
+        <?php
+        $sql = "SELECT username, password, role FROM users";
+        $result = $conn->query($sql);
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                echo "<tr>
+                        <td>" . $row["username"] . "</td>
+                        <td>" . $row["password"] . "</td>
+                        <td>" . $row["role"] . "</td>
+                        <td>
+                            <button onclick='confirmDelete(\"" . $row["username"] . "\")'>
+                                Delete
+                            </button>
+                        </td>
+                    </tr>";
+            }
+        } else {
+            echo "<tr><td colspan='4'>0 results</td></tr>";
         }
-    } else {
-        echo "<tr><td colspan='4'>0 results</td></tr>";
-    }
-    ?>
-</table>
-    <br>
-    <button onclick="window.location.href='admin.php'">Back to Admin</button>
+        ?>
+    </table>
+    <div class="container">
+        <button class="adm" onclick="window.location.href='admin.php'">Back to Admin</button>
+    </div>
 
     <script>
         function confirmDelete(username) {
@@ -114,79 +151,3 @@ if (isset($_POST['delete_user'])) {
     ?>
 </body>
 </html>
-
-<style>
-  body {
-    background: #DAE2F8;  /* fallback for old browsers */
-background: -webkit-linear-gradient(to right, #D6A4A4, #DAE2F8);  /* Chrome 10-25, Safari 5.1-6 */
-background: linear-gradient(to right, #D6A4A4, #DAE2F8); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-
-    background-position: center top;
-    font-family: 'Roboto', sans-serif;
-    color: black;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100vh; 
-}
-
-.container {
-  text-align: center;
-  max-width: 800px;
-  margin: 0 auto;
-}
-
-h1 {
-  font-size: 3rem;
-  margin-bottom: 2rem;
-}
-
-table {
-  border-collapse: collapse;
-  border: 2px solid #fff;
-  width: 80%;
-  margin-bottom: 2rem;
-}
-
-th, td {
-  border: 1px solid #fff;
-  padding: 0.5rem;
-  text-align: left;
-}
-table {
-    border-collapse: collapse;
-    border: none;
-    background-color: #CCCCCC; /* Dark color code */
-    color: black; /* Text color to contrast with the dark background */
-    width: 80%;
-    margin-bottom: 2rem;
-}
-
-
-th {
-  background-color: rgba(255, 255, 255, 0.5);
-}
-
-.delete-icon {
-  cursor: pointer;
-}
-
-button {
-  font-size: 1.5rem;
-  padding: 0.5rem 2rem;
-  border: none;
-  border-radius: 5px;
-  background-color: rgba(255, 255, 255, 0.8);
-  color: #333;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-  margin-bottom: 1rem;
-}
-
-button:hover {
-  background-color: #f2f2f2;
-}
-
-
-</style>

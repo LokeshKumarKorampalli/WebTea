@@ -149,9 +149,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 <style>
  body {
-    background-image: url('https://scontent-maa2-2.xx.fbcdn.net/v/t39.30808-6/275016854_2024762714364261_334990563190869262_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=5f2048&_nc_ohc=3gDRzU_bqFYAb7uypVn&_nc_ht=scontent-maa2-2.xx&oh=00_AfBwBhWlzRlaudg14xz0IwETJ3_3IWPVaTesWy4ENdR01A&oe=661AE7D3');
-    background-size: cover;
-    background-position: center top;
+    background-image: url('../../AA.png');
+    background-size: 105% 130%;
+    background-position: center;
     font-family: 'Roboto', sans-serif;
     color: black;
     display: flex;

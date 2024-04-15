@@ -77,20 +77,108 @@ if (isset($_POST['student_id'])) {
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Record Exit</title>
-</head>
-<body>
-    <h1>Record Exit</h1>
-    
-    <form method="post" action="">
-        <label for="student_id">Enter Student ID:</label>
-        <input type="text" id="student_id" name="student_id" required>
-        <button type="submit">Record Exit</button>
-    </form>
-    <a href="gate.php"><button>Go Back to Home Page</button></a>
+    <title>Record Entry</title>
+    <style>
+        body {
+            background-image: url('../../AA.png');
+            background-size: 105% 130%;
+            background-position: center;
+            font-family: 'Roboto', sans-serif;
+            color: black;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            
+        }
 
+        .container {
+            max-width: 500px;
+            width: 100%;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        form {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        label {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        input[type="text"] {
+            padding: 0.5rem;
+            font-size: 1.2rem;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            margin-bottom: 1rem;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        button {
+            font-size: 1.5rem;
+            padding: 0.5rem 2rem;
+            margin: 0.5rem;
+            border: none;
+            border-radius: 5px;
+            background-color: rgba(255, 255, 255, 0.8);
+            color: #333;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+
+        }
+
+        button:hover {
+            background-color: #f2f2f2;
+        }
+
+
+        a button {
+            background-color: #f2f2f2;
+            color: #333;
+            align-self: center;
+        }
+
+        a button:hover {
+            background-color: #e2e2e2;
+        }
+
+        a {
+            display: flex;
+            justify-content: center;
+            margin-top: 10px;
+        }
+
+        a button {
+            background-color: #f2f2f2;
+            color: #333;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1 style="text-align: center;">Record Exit</h1>
+
+        <form method="post" action="">
+            <label for="student_id">Enter Student ID:</label>
+            <input type="text" id="student_id" name="student_id" required>
+            <button type="submit">Record Exit</button>
+        </form>
+        <a href="gate.php"><button>Go Back to Home Page</button></a>
+    </div>
 </body>
+
 </html>
