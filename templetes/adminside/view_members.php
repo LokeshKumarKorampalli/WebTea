@@ -12,23 +12,21 @@ if ($_SESSION['role'] !== "admin") {
     exit;
 }
 
-// Function to delete user record
 function deleteUser($username) {
     global $conn;
     $sql = "DELETE FROM users WHERE username = ?";
     if ($stmt = $conn->prepare($sql)) {
         $stmt->bind_param("s", $username);
         if ($stmt->execute()) {
-            return true; // Record deleted successfully
+            return true;
         } else {
-            return false; // Error deleting record
+            return false; 
         }
     } else {
-        return false; // Error in prepared statement
+        return false; 
     }
 }
 
-// Check if delete button is clicked
 if (isset($_POST['delete_user'])) {
     $username = $_POST['username'];
     if (deleteUser($username)) {
@@ -59,11 +57,10 @@ if (isset($_POST['delete_user'])) {
     height: 100vh; 
 }
 
-        /* Additional styling for table and buttons */
         table {
             border-collapse: collapse;
             width: 50%;
-            margin: 0 auto; /* Center the table horizontally */
+            margin: 0 auto;
         }
 
         button {
@@ -71,14 +68,14 @@ if (isset($_POST['delete_user'])) {
             padding: 8px 16px;
             border: none;
             border-radius: 4px;
-            background-color: #ccc; /* Light grey color */
-            color: #333; /* Dark text color */
+            background-color: #ccc;
+            color: #333; 
             cursor: pointer;
             transition: background-color 0.3s ease;
         }
 
         button:hover {
-            background-color: #bbb; /* Darker grey on hover */
+            background-color: #bbb;
         }
 
         .container {
@@ -101,7 +98,7 @@ if (isset($_POST['delete_user'])) {
             <th>Username</th>
             <th>Password</th>
             <th>Role</th>
-            <th class="act">Action</th> <!-- Add a new header for action -->
+            <th class="act">Action</th>
         </tr>
         <?php
         $sql = "SELECT username, password, role FROM users";
@@ -136,7 +133,6 @@ if (isset($_POST['delete_user'])) {
         }
     </script>
     
-    <!-- Hidden forms for each user to perform delete action -->
     <?php
     $sql = "SELECT username FROM users";
     $result = $conn->query($sql);

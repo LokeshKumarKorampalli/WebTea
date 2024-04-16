@@ -29,10 +29,8 @@ if ($result->num_rows > 0) {
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['selected_table'])) {
     $selected_table = $_POST['selected_table'];
     
-    // Extract the date suffix from the selected table name
     $date_suffix = substr($selected_table, strlen('permitted_students_'));
 
-    // Construct the SQL query to join 'permitted_students' with 'all_students'
     $ugids_sql = "SELECT a.UGID, a.Name, a.Course, a.email, p.entry_time, p.exit_time
                   FROM all_students a 
                   JOIN $selected_table p ON a.UGID = p.UGID";

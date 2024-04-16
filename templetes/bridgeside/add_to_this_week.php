@@ -2,13 +2,12 @@
 include '../../db_connection.php'; 
 session_start(); 
 
-$successMessage = ''; // Variable to store success message
+$successMessage = '';
 if (!isset($_ENV['DB_NAME']) || empty($_ENV['DB_NAME'])) {
     die("Database name environment variable is not set.");
 }
 
 $db_name = $_ENV['DB_NAME'];
-// Get the latest table name from the database
 $latest_table_sql = "SELECT TABLE_NAME 
                      FROM information_schema.tables 
                      WHERE TABLE_SCHEMA = '$db_name' 
@@ -18,22 +17,18 @@ $latest_table_sql = "SELECT TABLE_NAME
 $result = $conn->query($latest_table_sql);
 if ($result->num_rows > 0) {
     $latest_table = $result->fetch_assoc()['TABLE_NAME'];
-    // Check if UGID already exists in the latest table
     if (!empty($_POST['ugid'])) {
-        $ugid = strtoupper($_POST['ugid']); // Convert to uppercase
-        // Check if UGID exists in all_students table
+        $ugid = strtoupper($_POST['ugid']); 
         $check_ugid_sql = "SELECT COUNT(*) AS count FROM all_students WHERE UGID = '$ugid'";
         $check_result = $conn->query($check_ugid_sql);
         $ugid_count = $check_result->fetch_assoc()['count'];
         if ($ugid_count > 0) {
-            // UGID exists in all_students table, proceed to check if it exists in the latest permitted_students table
             $check_ugid_permitted_sql = "SELECT COUNT(*) AS count FROM $latest_table WHERE UGID = '$ugid'";
             $check_permitted_result = $conn->query($check_ugid_permitted_sql);
             $ugid_permitted_count = $check_permitted_result->fetch_assoc()['count'];
             if ($ugid_permitted_count > 0) {
                 $successMessage = "UGID '$ugid' already exists in $latest_table";
             } else {
-                // Insert the UGID into the latest table
                 $insert_sql = "INSERT INTO $latest_table (UGID) VALUES ('$ugid')";
                 if ($conn->query($insert_sql) === TRUE) {
                     $successMessage = "UGID '$ugid' added successfully to $latest_table";
@@ -42,7 +37,6 @@ if ($result->num_rows > 0) {
                 }
             }
         } else {
-            // UGID does not exist in all_students table
             $successMessage = "UGID '$ugid' does not exist in the All Students table";
         }
     }
@@ -59,7 +53,6 @@ $conn->close();
     <script>
         function validateForm() {
             var ugid = document.getElementById("ugid").value;
-            // Check if the UGID has exactly 11 characters
             if (ugid.length !== 11) {
                 alert("UGID must have exactly 11 characters.");
                 return false;

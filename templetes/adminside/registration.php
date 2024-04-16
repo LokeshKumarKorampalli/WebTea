@@ -1,38 +1,28 @@
 <?php
-include '../../db_connection.php'; // Include the database connection file
+include '../../db_connection.php'; 
 
-// Start the session
 session_start();
 
-// Check if user is logged in as admin, if not redirect to login page
 if (!isset($_SESSION['username']) || !isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
     header("Location: ../../index.html");
     exit;
 }
 
-// Define variables and initialize with empty values
 $username = $password = $confirm_password = $role = "";
 $username_err = $password_err = $confirm_password_err = $role_err = "";
 
-// Processing form data when form is submitted
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Validate username
     if (empty(trim($_POST["username"]))) {
         $username_err = "Please enter a username.";
     } else {
-        // Prepare a select statement
         $sql = "SELECT username FROM users WHERE username = ?";
 
         if ($stmt = $conn->prepare($sql)) {
-            // Bind variables to the prepared statement as parameters
             $stmt->bind_param("s", $param_username);
 
-            // Set parameters
             $param_username = trim($_POST["username"]);
 
-            // Attempt to execute the prepared statement
             if ($stmt->execute()) {
-                // Store result
                 $stmt->store_result();
 
                 if ($stmt->num_rows == 1) {
@@ -43,13 +33,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             } else {
                 echo "Oops! Something went wrong. Please try again later.";
             }
-
-            // Close statement
             $stmt->close();
         }
     }
 
-    // Validate password
     if (empty(trim($_POST["password"]))) {
         $password_err = "Please enter a password.";
     } elseif (strlen(trim($_POST["password"])) < 6) {
@@ -58,7 +45,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $password = trim($_POST["password"]);
     }
 
-    // Validate confirm password
     if (empty(trim($_POST["confirm_password"]))) {
         $confirm_password_err = "Please confirm password.";
     } else {
@@ -68,41 +54,31 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
     }
 
-    // Validate role
     if (empty(trim($_POST["role"]))) {
         $role_err = "Please enter a role.";
     } else {
         $role = trim($_POST["role"]);
     }
 
-    // Check input errors before inserting into database
     if (empty($username_err) && empty($password_err) && empty($confirm_password_err) && empty($role_err)) {
-        // Prepare an insert statement
         $sql = "INSERT INTO users (username, password, role) VALUES (?, ?, ?)";
 
         if ($stmt = $conn->prepare($sql)) {
-            // Bind variables to the prepared statement as parameters
             $stmt->bind_param("sss", $param_username, $param_password, $param_role);
 
-            // Set parameters
             $param_username = $username;
-            $param_password = $password; // Store password as plain text
+            $param_password = $password; 
             $param_role = $role;
 
-            // Attempt to execute the prepared statement
             if ($stmt->execute()) {
-                // Redirect to admin.php page
                 header("location: admin.php");
             } else {
                 echo "Something went wrong. Please try again later.";
             }
 
-            // Close statement
             $stmt->close();
         }
     }
-
-    // Close connection
     $conn->close();
 }
 ?>

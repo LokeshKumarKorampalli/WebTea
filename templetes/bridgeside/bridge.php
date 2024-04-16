@@ -6,27 +6,23 @@ if (!isset($_SESSION['username']) || !isset($_SESSION['role'])) {
     exit;
 }
 
-// Check if the user's role is "bridge"
 if ($_SESSION['role'] !== "bridge") {
     header("Location: ../../index.html");
     exit;
 }
 
-// Display the username and role
 $username = $_SESSION['username'];
 $role = $_SESSION['role'];
 
-// Function to log out the user
 function logout() {
-    session_unset(); // Unset all session variables
-    session_destroy(); // Destroy the session
-    header("Location: ../../index.html"); // Redirect to the login page
+    session_unset(); 
+    session_destroy(); 
+    header("Location: ../../index.html"); 
     exit;
 }
 
-// Check if the logout button is clicked
 if (isset($_POST['logout'])) {
-    logout(); // Call the logout function
+    logout(); 
 }
 ?>
 
